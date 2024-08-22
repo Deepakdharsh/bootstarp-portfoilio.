@@ -294,17 +294,17 @@
                     <input type="hidden" name="access_key" value="4e342834-499b-4fe2-8ab1-3d2baac22a42">
 
                     <div class="form-group col-sm-6">
-                        <input type="text" size="50" name="name" class="form-control" placeholder="Your Name" required>
+                        <input  type="text" size="50" id="name" name="name" class="form-control" placeholder="Your Name" required>
                     </div>
                     <div class="form-group col-sm-6">
-                        <input type="email" class="form-control"  name="email"  placeholder="Enter Email" requried>
+                        <input type="email" id="email" class="form-control"  name="email"  placeholder="Enter Email" requried>
                     </div>
                     <div class="form-group col-sm-12">
-                        <textarea name="message" id="comment" rows="6" class="form-control"
+                        <textarea  name="message" id="comment" rows="6" class="form-control"
                             placeholder="Write Something"></textarea>
                     </div>
                     <div class="form-group col-sm-12 mt-3">
-                        <input type="submit" value="Send Message" class="btn btn-outline-primary rounded">
+                        <input  type="submit" id="btn-sub" value="Send Message" class="btn btn-outline-primary rounded">
                     </div>
                 </div>
             </form><!-- end of contact form -->
@@ -339,7 +339,80 @@
 
     <!-- Meyawo js -->
     <script src="assets/js/meyawo.js"></script>
+    
+    <script>
+        const name=document.getElementById("name");
+        const email=document.getElementById("email");
+        const message=document.getElementById("comment");
+        const btn=document.getElementById("btn-sub");
 
+        btn.addEventListener("click",function rep(e){
+            e.preventDefault();
+            validate();
+        })
+
+        function validate(){
+            const nameRegex=/^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
+            const emailRegex =/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;    
+            let isvaild=true;
+
+            if(!emailRegex.test(email.value)){
+            email.style.border="solid 2px red"
+            isvaild=false;
+          }else{
+            email.style.border="solid 2px blue"
+          }
+
+          if(!nameRegex.test(name.value)){
+            name.style.border="solid 2px red"
+            isvaild=false;
+          }else{
+            name.style.border="solid 2px blue"
+          }
+
+          if(message.value.length<10){
+            message.style.border="solid 2px red"
+            isvaild=false;
+          }else{
+            message.style.border="solid 2px blue"
+          }
+
+        if(isInvaild){
+            const formData=document.getElementById("cons")
+            const object=object.fromEntries(formData);
+            const json=JSON.stringify(object)
+            result.innerHTMl="please wait";
+        }
+        etch('https://api.web3forms.com/submit', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Accept': 'application/json'
+					},
+					body: json
+				})
+					.then(async (response) => {
+						let json = await response.json();
+						if (response.status == 200) {
+							result.innerHTML = "Form submitted successfully";
+						} else {
+							console.log(response);
+							result.innerHTML = json.message;
+						}
+					})
+					.catch(error => {
+						console.log(error);
+						result.innerHTML = "Something went wrong!";
+					})
+					.then(function () {
+						form.reset();
+						setTimeout(() => {
+							result.innerText = "Send Message";
+						}, 3000);
+					});
+			}
+          
+    </script>
 </body>
 
 </html>
